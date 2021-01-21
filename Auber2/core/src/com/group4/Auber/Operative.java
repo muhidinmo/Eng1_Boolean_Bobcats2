@@ -30,7 +30,10 @@ public class Operative extends Actor {
   private HUD hud;
 
   public static int runAway = 3;
+  public static int hackingHide = 5;
+  public boolean stableHide;
 
+  public static int randomHide;
   /**
    * The number of remaining operative that are alive
    */
@@ -219,16 +222,29 @@ public class Operative extends Actor {
       }
     }
     else{
+
       //If the player is not in combat or attacking a system it must be moving
       move();
 
       //Check if we should start hacking
       if (getX() - hitboxOffset == target.getX() && getY() - hitboxOffset == target.getY()){
         isHacking = true;
+        stableHide = false;
       }
     }
-    // Draw the image
-    batch.draw(image, getX() - hitboxOffset, getY() - hitboxOffset, image.getWidth(), image.getHeight());
+    Random rand = new Random();
+    randomHide = rand.nextInt(2);
+
+    // Draw the image (chance of hiding)
+    if((isHacking) && (hackingHide > 0) && (randomHide == 1)){
+
+      hackingHide = hackingHide - 1;
+      stableHide = true;
+    }
+    else if(stableHide == false || isHacking == false){
+      batch.draw(image, getX() - hitboxOffset, getY() - hitboxOffset, image.getWidth(), image.getHeight());
+    }
+
   }
 
   /**

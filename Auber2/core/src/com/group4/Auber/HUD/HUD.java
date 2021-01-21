@@ -65,6 +65,8 @@ public class HUD extends Stage {
         notificationWindow.setPosition(Gdx.graphics.getWidth() - scaledWidth - xOffset, yOffset);
         this.addActor(notificationWindow);
 
+
+
         //Create the system health bar and add it to the stage
         systemsHealthBar = new HealthBar(50, scaledWidth, "System Health", Systems.systemsRemaining.size());
         systemsHealthBar.setPosition(Gdx.graphics.getWidth() - scaledWidth - xOffset, yOffset + scaledHeight);
