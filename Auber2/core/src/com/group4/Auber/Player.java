@@ -41,7 +41,7 @@ public class Player extends Actor {
     /**
      * The speed multiplier at which the player moves
      */
-    private float playerSpeed = 1.5f;
+    private float playerSpeed = 3f;
 
     /**
      * The health of the player

@@ -11,6 +11,7 @@ import com.group4.Auber.OperativeAI.GridGraph;
 import com.group4.Auber.OperativeAI.GridNode;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Creates an operative that goes to the systems and attacks them. It will also fight the player if attacked.
@@ -19,6 +20,7 @@ import java.util.ArrayList;
  * @author Bogdan Bodnariu-Lescinschi
  */
 public class Operative extends Actor {
+
   public static AuberGame game;
   private MapRenderer map;
   private Systems target;
@@ -26,6 +28,8 @@ public class Operative extends Actor {
   private GraphPath<GridNode> currentPath;
   private int nodeNum;
   private HUD hud;
+
+  public static int runAway = 3;
 
   /**
    * The number of remaining operative that are alive
@@ -137,6 +141,7 @@ public class Operative extends Actor {
     }
     //If the operative is hacking
     if (isHacking){
+      moveSpeed = 1.2f;
       if (target.health <= 0){//reached an already killed system
         isHacking = false;
         chooseTarget();
@@ -192,14 +197,22 @@ public class Operative extends Actor {
           //if (true){return;} //uncomment to kneecap them
           //move
           if (nodeNum >= currentPath.getCount()){
-            currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(player.getX()),map.gridPos(player.getY()));
+            Random rand = new Random();
+            int runAwayRandom = rand.nextInt(4)+1;
 
-            //chooses new target and runs away quickly after hit
-            //chooseTarget();
-            //currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
-            // moveSpeed = 3f;
 
+            if(runAway>0  && runAwayRandom == 1){
+              //chooses new target and runs away quickly after hit
+              chooseTarget();
+              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
+              moveSpeed = 4f;
+              runAway = runAway - 1;
+            }else{
+              moveSpeed = 1.2f;
+              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(player.getX()),map.gridPos(player.getY()));
+            }
             nodeNum = 0;
+
           }
           move();
         }
