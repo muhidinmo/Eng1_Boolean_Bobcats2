@@ -65,7 +65,7 @@ public class Operative extends Actor {
   /**
    * Set the speed of the player
    */
-  private final float moveSpeed = 1.2f;
+  public float moveSpeed = 1.2f;
 
   /**
    * the sound that is made when the operative has been attacked by the player
@@ -193,6 +193,12 @@ public class Operative extends Actor {
           //move
           if (nodeNum >= currentPath.getCount()){
             currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(player.getX()),map.gridPos(player.getY()));
+
+            //chooses new target and runs away quickly after hit
+            //chooseTarget();
+            //currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
+            // moveSpeed = 3f;
+
             nodeNum = 0;
           }
           move();
