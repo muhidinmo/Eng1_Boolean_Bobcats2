@@ -224,7 +224,7 @@ public class GameScreen extends ScreenAdapter {
     void CheckPause(){
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)){
             if (paused){
-                Gdx.input.setInputProcessor(stage);
+                Gdx.input.setInputProcessor(HUD.getStage());
                 ambience.play();
                 paused = false;
             } else {

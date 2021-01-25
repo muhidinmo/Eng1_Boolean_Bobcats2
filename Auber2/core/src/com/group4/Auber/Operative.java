@@ -28,10 +28,11 @@ public class Operative extends Actor {
   private GraphPath<GridNode> currentPath;
   private int nodeNum;
   private HUD hud;
-
+  public static int jamCom = 3;
   public static int runAway = 3;
   public static int hackingHide = 5;
   public boolean stableHide;
+  public int jamChance;
 
   public static int randomHide;
   /**
@@ -52,7 +53,7 @@ public class Operative extends Actor {
   /**
    * The targets that have not been attacked already
    */
-  private static ArrayList<Systems> untargetedSystems = new ArrayList<Systems>();;
+  private static ArrayList<Systems> untargetedSystems = new ArrayList<Systems>();
 
   /**
    *  used as a timer
@@ -156,7 +157,7 @@ public class Operative extends Actor {
       hackingHide = hackingHide - 1;
       stableHide = true;
     }
-    else if(stableHide == false || isHacking == false){
+    else if(!stableHide || !isHacking){
       batch.draw(image, getX() - hitboxOffset, getY() - hitboxOffset, image.getWidth(), image.getHeight());
     }
 
@@ -210,7 +211,7 @@ public class Operative extends Actor {
       isHacking = false;
       untargetedSystems.add(target);
       delay = 0;
-      if (combat == false){//combat just entered
+      if (!combat){//combat just entered
         currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(by.getX()),map.gridPos(by.getY()));
       }
       combat = true;
@@ -246,6 +247,7 @@ public class Operative extends Actor {
   }
 
   public void update(Batch batch){
+    Random rand = new Random();
     //If the operative is hacking
     if (isHacking){
       moveSpeed = 1.2f;
@@ -275,6 +277,12 @@ public class Operative extends Actor {
 
     //is the player in combat
     else if (combat){
+
+      jamChance = rand.nextInt(2)+1;
+      if(jamChance == 1 && jamCom > 0) {
+        hud.Jam(5);
+        jamCom = jamCom - 1;
+      }
       //attack?
       Player player = null;
       for (Actor thing : map.InArea(getX() - hitboxOffset,getY() - hitboxOffset,31,31)) {
@@ -304,7 +312,6 @@ public class Operative extends Actor {
           //if (true){return;} //uncomment to kneecap them
           //move
           if (nodeNum >= currentPath.getCount()){
-            Random rand = new Random();
             int runAwayRandom = rand.nextInt(4)+1;
 
 

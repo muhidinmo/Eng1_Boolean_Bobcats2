@@ -70,6 +70,7 @@ public class PauseMenu {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 menuSelect.play(0.2f);
                 game.setScreen(new GameScreen(game));
+                Constants.paused = false;
             }
         });
 
@@ -93,6 +94,7 @@ public class PauseMenu {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 menuSelect.play(0.2f);
                 game.setScreen(new TitleScreen(game, false));
+                Constants.paused = false;
             }
         });
 

@@ -187,7 +187,7 @@ public class HUD extends Stage {
      *
      * @return returns the value of this
      */
-    private Stage getStage(){
+    public Stage getStage(){
         return this;
     }
 
