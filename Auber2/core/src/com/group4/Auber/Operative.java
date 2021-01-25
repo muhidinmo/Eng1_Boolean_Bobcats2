@@ -142,96 +142,11 @@ public class Operative extends Actor {
     if (dead){//prevents problems caused by race conditions (where they are killed and then draw is run)
       return;
     }
-    //If the operative is hacking
-    if (isHacking){
-      moveSpeed = 1.2f;
-      if (target.health <= 0){//reached an already killed system
-        isHacking = false;
-        chooseTarget();
-      } else{
-        //delay == A - 1, A is the number of frames an oponent must spend hacking to damage the system
-        if (delay == 18 - 1){
 
-          //damage dealt per A frames
-          target.onHit(this, 1);
-
-          batch.draw(imageAttack,getX() - hitboxOffset,getY() - hitboxOffset,32,32);
-
-          //is the target dead
-          if (target.health <= 0){
-            isHacking = false;
-            chooseTarget();
-          }
-          delay = 0;
-        } else{
-          delay += 1;
-        }
-      }
+    if (!Constants.paused){
+      update(batch);
     }
 
-    //is the player in combat
-    else if (combat){
-      //attack?
-      Player player = null;
-      for (Actor thing : map.InArea(getX() - hitboxOffset,getY() - hitboxOffset,31,31)) {
-        if (thing instanceof Player && delay == 0){
-          player = (Player) thing;
-          player.onHit(this,15);
-          batch.draw(imageAttack,getX() - hitboxOffset,getY() - hitboxOffset,32,32);
-          delay = 60;
-          break;//only one player
-        }
-      }
-      if (delay > 0){delay -= 1;}
-      if (player == null){
-        //check if player still nearby
-        float size = 32*10;
-        for (Actor thing : map.InArea(getX() + getWidth()/2 - size/2 - hitboxOffset,getY() + getHeight()/2 - size/2 - hitboxOffset,size,size)) {
-          if (thing instanceof Player){
-            player = (Player) thing;
-            break;//only one player
-          }
-        }
-        if (player == null){//end combat
-          combat = false;
-          delay = 0;
-          chooseTarget();
-        } else {//player still nearby
-          //if (true){return;} //uncomment to kneecap them
-          //move
-          if (nodeNum >= currentPath.getCount()){
-            Random rand = new Random();
-            int runAwayRandom = rand.nextInt(4)+1;
-
-
-            if(runAway>0  && runAwayRandom == 1){
-              //chooses new target and runs away quickly after hit
-              chooseTarget();
-              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
-              moveSpeed = 4f;
-              runAway = runAway - 1;
-            }else{
-              moveSpeed = 1.2f;
-              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(player.getX()),map.gridPos(player.getY()));
-            }
-            nodeNum = 0;
-
-          }
-          move();
-        }
-      }
-    }
-    else{
-
-      //If the player is not in combat or attacking a system it must be moving
-      move();
-
-      //Check if we should start hacking
-      if (getX() - hitboxOffset == target.getX() && getY() - hitboxOffset == target.getY()){
-        isHacking = true;
-        stableHide = false;
-      }
-    }
     Random rand = new Random();
     randomHide = rand.nextInt(2);
 
@@ -328,5 +243,98 @@ public class Operative extends Actor {
 
     //Add a success notification in the heads up display
     hud.successNotification("You apprehended an operative.");
+  }
+
+  public void update(Batch batch){
+    //If the operative is hacking
+    if (isHacking){
+      moveSpeed = 1.2f;
+      if (target.health <= 0){//reached an already killed system
+        isHacking = false;
+        chooseTarget();
+      } else{
+        //delay == A - 1, A is the number of frames an opponent must spend hacking to damage the system
+        if (delay == 18 - 1){
+
+          //damage dealt per A frames
+          target.onHit(this, 1);
+
+          batch.draw(imageAttack,getX() - hitboxOffset,getY() - hitboxOffset,32,32);
+
+          //is the target dead
+          if (target.health <= 0){
+            isHacking = false;
+            chooseTarget();
+          }
+          delay = 0;
+        } else{
+          delay += 1;
+        }
+      }
+    }
+
+    //is the player in combat
+    else if (combat){
+      //attack?
+      Player player = null;
+      for (Actor thing : map.InArea(getX() - hitboxOffset,getY() - hitboxOffset,31,31)) {
+        if (thing instanceof Player && delay == 0){
+          player = (Player) thing;
+          player.onHit(this,15);
+          batch.draw(imageAttack,getX() - hitboxOffset,getY() - hitboxOffset,32,32);
+          delay = 60;
+          break;//only one player
+        }
+      }
+      if (delay > 0){delay -= 1;}
+      if (player == null){
+        //check if player still nearby
+        float size = 32*10;
+        for (Actor thing : map.InArea(getX() + getWidth()/2 - size/2 - hitboxOffset,getY() + getHeight()/2 - size/2 - hitboxOffset,size,size)) {
+          if (thing instanceof Player){
+            player = (Player) thing;
+            break;//only one player
+          }
+        }
+        if (player == null){//end combat
+          combat = false;
+          delay = 0;
+          chooseTarget();
+        } else {//player still nearby
+          //if (true){return;} //uncomment to kneecap them
+          //move
+          if (nodeNum >= currentPath.getCount()){
+            Random rand = new Random();
+            int runAwayRandom = rand.nextInt(4)+1;
+
+
+            if(runAway>0  && runAwayRandom == 1){
+              //chooses new target and runs away quickly after hit
+              chooseTarget();
+              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
+              moveSpeed = 4f;
+              runAway = runAway - 1;
+            }else{
+              moveSpeed = 1.2f;
+              currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), map.gridPos(player.getX()),map.gridPos(player.getY()));
+            }
+            nodeNum = 0;
+
+          }
+          move();
+        }
+      }
+    }
+    else{
+
+      //If the player is not in combat or attacking a system it must be moving
+      move();
+
+      //Check if we should start hacking
+      if (getX() - hitboxOffset == target.getX() && getY() - hitboxOffset == target.getY()){
+        isHacking = true;
+        stableHide = false;
+      }
+    }
   }
 }

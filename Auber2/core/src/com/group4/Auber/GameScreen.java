@@ -11,10 +11,12 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.group4.Auber.HUD.HUD;
+import com.group4.Auber.HUD.PauseMenu;
 import org.json.*;
 
 
@@ -32,6 +34,9 @@ public class GameScreen extends ScreenAdapter {
     private MapRenderer map;
     private OrthographicCamera camera;
     private com.group4.Auber.HUD.HUD HUD;
+
+    private boolean paused;
+    public PauseMenu pauseMenu;
 
     /**
      * The lerp of the camera, used for linear interpolation on the player movement to calculate the camera position
@@ -74,6 +79,11 @@ public class GameScreen extends ScreenAdapter {
     JSONObject gameData = new JSONObject(Gdx.files.internal("mapdata.json").readString());
 
     /**
+     * List of the operatives so that they can be updated
+     */
+    Array<Operative> ops;
+
+    /**
      * Create the game and start the background sounds playing
      *
      * @param game the AuberGame game
@@ -96,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
 
         //Create the stage and allow it to process inputs. Using an Extend Viewport for scalability of the product
         stage = new Stage(new ExtendViewport(w/3f, h/3f, camera));
-
+        pauseMenu = new PauseMenu(game);
 
         //Load the map and create it
         map = new MapRenderer(tiledMap, Gdx.files.internal("walkable_map.txt").readString());
@@ -131,15 +141,17 @@ public class GameScreen extends ScreenAdapter {
         }
 
         //create operatives + add them to the stage
+        ops = new Array<>();
         Operative.remainingOpers = 0;
         for (int i = 0; i < gameData.getJSONArray("operativeStartCoords").length(); i++) {
-            stage.addActor(
-                    new Operative(
-                            gameData.getJSONArray("operativeStartCoords").getJSONArray(i).getInt(0),
-                            gameData.getJSONArray("operativeStartCoords").getJSONArray(i).getInt(1),
-                            map,
-                            this.HUD
-                        ));
+            Operative op = new Operative(
+                    gameData.getJSONArray("operativeStartCoords").getJSONArray(i).getInt(0),
+                    gameData.getJSONArray("operativeStartCoords").getJSONArray(i).getInt(1),
+                    map,
+                    this.HUD
+            );
+            stage.addActor(op);
+            ops.add(op);
         }
 
         HUD.setValues(Operative.remainingOpers, Systems.systemsRemaining.size());
@@ -147,6 +159,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
         //Set the background colour & draw the stage
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
@@ -170,10 +183,11 @@ public class GameScreen extends ScreenAdapter {
         //Draw the HUD
         HUD.draw();
 
-        //Leave the game if the secape key is pressed
-        if (Gdx.input.isKeyPressed(Keys.ESCAPE)){
-            ambience.stop();
-            game.setScreen(new TitleScreen(game, false));
+        //Pause the game if the escape key is pressed
+        CheckPause();
+
+        if (paused){
+            pauseMenu.draw(delta);
         }
 
         //Show the map if the M key is pressed
@@ -182,6 +196,13 @@ public class GameScreen extends ScreenAdapter {
             mapSpriteBatch.draw(mapPopupTexture, 0, 0);
             mapSpriteBatch.end();
         }
+    }
+
+    @Override
+    public void pause() {
+        ambience.pause();
+        paused = true;
+        Constants.paused = true;
     }
 
     @Override
@@ -199,4 +220,21 @@ public class GameScreen extends ScreenAdapter {
         stage.dispose();
         HUD.dispose();
     }
+
+    void CheckPause(){
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)){
+            if (paused){
+                Gdx.input.setInputProcessor(stage);
+                ambience.play();
+                paused = false;
+            } else {
+                pauseMenu.on();
+                ambience.pause();
+                paused = true;
+            }
+
+            Constants.paused = paused;
+        }
+    }
+
 }

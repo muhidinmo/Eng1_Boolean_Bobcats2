@@ -45,6 +45,13 @@ public class HUD extends Stage {
     final protected float yOffset = 10;
 
     /**
+     * Amount of time a communication jam occurs for
+     * Whether the HUD is jammed
+     */
+    private float jamTime = 1;
+    private boolean jammed = false;
+
+    /**
      * Create the player health bar, notification window, system health bar, operative health bar and teleporter
      * dialogue
      * @param player The player object
@@ -145,7 +152,14 @@ public class HUD extends Stage {
      */
     @Override
     public void draw(){
-        super.draw();
+        if (!jammed) {
+            super.draw();
+        } else{
+            jamTime -= Gdx.graphics.getDeltaTime();
+            if (jamTime <= 0){
+                jammed = false;
+            }
+        }
         //Set the current values
         systemsHealthBar.setCurrentValue(Systems.systemsRemaining.size());
         operativesHealthBar.setCurrentValue(Operative.remainingOpers);
@@ -175,5 +189,10 @@ public class HUD extends Stage {
      */
     private Stage getStage(){
         return this;
+    }
+
+    public void Jam(float time){
+        jamTime = time;
+        jammed = true;
     }
 }

@@ -78,101 +78,8 @@ public class Player extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
-        //Move the player by a set amount if the keys are pressed.
-        float deltaX = 0;
-        float deltaY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            deltaY += playerSpeed;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            deltaY -= playerSpeed;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            deltaX -= playerSpeed;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            deltaX += playerSpeed;
-        }
-
-        //Check the space is empty before moving into it
-        map.autoLeave(this,getX(),getY(), getWidth(), getHeight());
-        if (map.Empty(getX() + deltaX, getY(), getWidth(), getHeight())){
-            moveBy(deltaX, 0);
-        }
-        if (map.Empty(getX(), getY() + deltaY, getWidth(), getHeight())){
-            moveBy(0, deltaY);
-        }
-        map.autoEnter(this,getX(),getY(), getWidth(), getHeight());
-
-        //See if the player has moved
-        if (Math.abs(deltaX) > 0 || Math.abs(deltaY) > 0){
-            
-            //Sets the footstep sound effect to play at 0.32 sec intervals when the player is moving
-            if (TimeUtils.timeSinceNanos(audioStartTimer) > 320000000) {
-                step.play(0.3f);
-                audioStartTimer = TimeUtils.nanoTime();
-            }
-
-            //Change the image
-            if (Math.abs(deltaX) >= Math.abs(deltaY)) {
-                if(deltaX > 0){
-                    currentImage = imageRight;
-                } else {
-                    currentImage = imageLeft;
-                }
-            } else {
-                if(deltaY > 0){
-                    currentImage = imageUp;
-                } else {
-                    currentImage = imageDown;
-                }
-            }
-
-        }
-
-        //If the space bar is down attack
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            float xAtt = getX() - 12f;
-            float yAtt = getY() - 6f;
-
-            //assuming the imageAttack square so just get the width
-            float wAtt = imageAttack.getWidth();
-
-            //What direction to attack in?
-            if(currentImage == imageRight){
-                //attack right
-                xAtt += 32;
-            }else if (currentImage == imageLeft) {
-                //attack left
-                xAtt -= 32;
-            }else if(currentImage == imageUp){
-                //attack up
-                yAtt  += 32;
-            }else if (currentImage == imageDown) {
-                //attack down
-                yAtt  -= 32;
-            }
-
-            //do the attack
-            if (attackDelay == 0){
-                Operative target = null;
-                for (Actor thing : map.InArea(xAtt, yAtt, wAtt, wAtt)) {
-                    if (thing instanceof Operative){
-                        target = (Operative) thing;
-                        target.onHit(this, 20);
-                        punch1.play(0.20f);
-                    }
-                }
-                if (target == null) {
-                    swing.play(0.45f);
-                }
-                attackDelay = 61;
-                //display attack
-                batch.draw(imageAttack, xAtt, yAtt, wAtt, wAtt);
-            } else {
-                //display uncharged attack
-                batch.draw(imageTarget, xAtt, yAtt, wAtt, wAtt);
-            }
+        if (!Constants.paused){
+            update(batch);
         }
 
         //attack delay
@@ -236,5 +143,104 @@ public class Player extends Actor {
      */
     public int getHealth(){
         return health;
+    }
+
+    public void update(Batch batch){
+        //Move the player by a set amount if the keys are pressed.
+        float deltaX = 0;
+        float deltaY = 0;
+        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+            deltaY += playerSpeed;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+            deltaY -= playerSpeed;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            deltaX -= playerSpeed;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            deltaX += playerSpeed;
+        }
+
+        //Check the space is empty before moving into it
+        map.autoLeave(this,getX(),getY(), getWidth(), getHeight());
+        if (map.Empty(getX() + deltaX, getY(), getWidth(), getHeight())){
+            moveBy(deltaX, 0);
+        }
+        if (map.Empty(getX(), getY() + deltaY, getWidth(), getHeight())){
+            moveBy(0, deltaY);
+        }
+        map.autoEnter(this,getX(),getY(), getWidth(), getHeight());
+
+        //See if the player has moved
+        if (Math.abs(deltaX) > 0 || Math.abs(deltaY) > 0){
+
+            //Sets the footstep sound effect to play at 0.32 sec intervals when the player is moving
+            if (TimeUtils.timeSinceNanos(audioStartTimer) > 320000000) {
+                step.play(0.3f);
+                audioStartTimer = TimeUtils.nanoTime();
+            }
+
+            //Change the image
+            if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+                if(deltaX > 0){
+                    currentImage = imageRight;
+                } else {
+                    currentImage = imageLeft;
+                }
+            } else {
+                if(deltaY > 0){
+                    currentImage = imageUp;
+                } else {
+                    currentImage = imageDown;
+                }
+            }
+
+        }
+
+        //If the space bar is down attack
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            float xAtt = getX() - 12f;
+            float yAtt = getY() - 6f;
+
+            //assuming the imageAttack square so just get the width
+            float wAtt = imageAttack.getWidth();
+
+            //What direction to attack in?
+            if(currentImage == imageRight){
+                //attack right
+                xAtt += 32;
+            }else if (currentImage == imageLeft) {
+                //attack left
+                xAtt -= 32;
+            }else if(currentImage == imageUp){
+                //attack up
+                yAtt  += 32;
+            }else if (currentImage == imageDown) {
+                //attack down
+                yAtt  -= 32;
+            }
+
+            //do the attack
+            if (attackDelay == 0){
+                Operative target = null;
+                for (Actor thing : map.InArea(xAtt, yAtt, wAtt, wAtt)) {
+                    if (thing instanceof Operative){
+                        target = (Operative) thing;
+                        target.onHit(this, 20);
+                        punch1.play(0.20f);
+                    }
+                }
+                if (target == null) {
+                    swing.play(0.45f);
+                }
+                attackDelay = 61;
+                //display attack
+                batch.draw(imageAttack, xAtt, yAtt, wAtt, wAtt);
+            } else {
+                //display uncharged attack
+                batch.draw(imageTarget, xAtt, yAtt, wAtt, wAtt);
+            }
+        }
     }
 }
