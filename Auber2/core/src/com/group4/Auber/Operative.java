@@ -33,6 +33,7 @@ public class Operative extends Actor {
   public static int hackingHide = 5;
   public boolean stableHide;
   public int jamChance;
+  public boolean jamming;
 
   public static int randomHide;
   /**
@@ -279,9 +280,10 @@ public class Operative extends Actor {
     else if (combat){
 
       jamChance = rand.nextInt(2)+1;
-      if(jamChance == 1 && jamCom > 0) {
+      if(jamChance == 1 && jamCom >= 0 && !jamming) {
         hud.Jam(5);
         jamCom = jamCom - 1;
+        jamming = true;
       }
       //attack?
       Player player = null;
