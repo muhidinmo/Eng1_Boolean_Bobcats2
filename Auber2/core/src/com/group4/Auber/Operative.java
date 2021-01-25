@@ -149,12 +149,13 @@ public class Operative extends Actor {
       update(batch);
     }
 
+
+    // Has the chance of becoming invisible when attacking a system
+    // Happens hackingHide number of times with a chance of randomHide
     Random rand = new Random();
     randomHide = rand.nextInt(2);
-
     // Draw the image (chance of hiding)
     if((isHacking) && (hackingHide > 0) && (randomHide == 1)){
-
       hackingHide = hackingHide - 1;
       stableHide = true;
     }
@@ -279,6 +280,9 @@ public class Operative extends Actor {
     //is the player in combat
     else if (combat){
 
+      // Jams the HUD when operative is attacked,
+      // Happens jamCom many times with a probability of jamChance
+
       jamChance = rand.nextInt(2)+1;
       if(jamChance == 1 && jamCom >= 0 && !jamming) {
         hud.Jam(5);
@@ -314,11 +318,14 @@ public class Operative extends Actor {
           //if (true){return;} //uncomment to kneecap them
           //move
           if (nodeNum >= currentPath.getCount()){
+
+
+             // Has a chance of increasing speed and assigning new target
+             // whenever the operative attacks a player
+             // Happens runAway times at a probability of runAwayRandom
+
             int runAwayRandom = rand.nextInt(4)+1;
-
-
             if(runAway>0  && runAwayRandom == 1){
-              //chooses new target and runs away quickly after hit
               chooseTarget();
               currentPath = pathfinder.findPath(map.gridPos(getX()),map.gridPos(getY()), target.gridX,target.gridY);
               moveSpeed = 4f;
