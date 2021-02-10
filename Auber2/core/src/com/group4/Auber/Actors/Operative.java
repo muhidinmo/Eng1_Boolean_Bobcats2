@@ -1,4 +1,4 @@
-package com.group4.Auber;
+package com.group4.Auber.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.GraphPath;
@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.audio.Sound;
+import com.group4.Auber.AuberGame;
+import com.group4.Auber.Constants;
 import com.group4.Auber.HUD.HUD;
+import com.group4.Auber.MapRenderer;
 import com.group4.Auber.OperativeAI.GridGraph;
 import com.group4.Auber.OperativeAI.GridNode;
 import com.group4.Auber.Screens.GameEndScreen;
@@ -66,7 +69,7 @@ public class Operative extends Actor {
   /**
    * the health of the operative
    */
-  private int health = 100;
+  public int health = 100;
 
   /**
    * used to make the hitbox center on the image
@@ -96,7 +99,7 @@ public class Operative extends Actor {
   /**
    * is this operative dead?
    */
-  private boolean dead = false;
+  public boolean dead = false;
 
   /**
    * Create the operative at starting point
@@ -112,6 +115,19 @@ public class Operative extends Actor {
 
     //Create the path finder
     if (pathfinder == null){pathfinder = new GridGraph(map,x,y);}
+
+    //Add all the systems to untargetedSystems, if this is the first operative made
+    if (remainingOpers == 0){untargetedSystems.addAll(Systems.systemsRemaining);}
+
+    remainingOpers += 1;
+    setBounds(map.worldPos(x), map.worldPos(y),20f,20f);
+    chooseTarget();
+  }
+
+  public Operative(int x, int y, MapRenderer map, HUD hud, GridGraph pathfinder) {
+    this.map = map;
+    this.hud = hud;
+    Operative.pathfinder = pathfinder;
 
     //Add all the systems to untargetedSystems, if this is the first operative made
     if (remainingOpers == 0){untargetedSystems.addAll(Systems.systemsRemaining);}

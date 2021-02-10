@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.group4.Auber.Systems;
-import com.group4.Auber.Operative;
-import com.group4.Auber.Player;
+import com.group4.Auber.Actors.Systems;
+import com.group4.Auber.Actors.Operative;
+import com.group4.Auber.Actors.Player;
 import org.json.JSONObject;
 
 /**

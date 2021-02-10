@@ -1,11 +1,11 @@
-package com.group4.Auber;
+package com.group4.Auber.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,6 +15,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
+import com.group4.Auber.*;
+import com.group4.Auber.Actors.Operative;
+import com.group4.Auber.Actors.Player;
+import com.group4.Auber.Actors.Systems;
 import com.group4.Auber.HUD.HUD;
 import com.group4.Auber.HUD.PauseMenu;
 import org.json.*;
@@ -42,16 +46,6 @@ public class GameScreen extends ScreenAdapter {
      * The lerp of the camera, used for linear interpolation on the player movement to calculate the camera position
      */
     private final float CameraLerp = 2f;
-
-    /**
-     * The sprite batch for everything except the map popup
-     */
-    //private SpriteBatch batch = new SpriteBatch();
-
-    /**
-     * Used for the map pop up. This batch renders over the top of the normal batch when the map is open.
-     */
-    //private SpriteBatch mapSpriteBatch = new SpriteBatch();
 
     /**
      * The background sounds
@@ -173,9 +167,9 @@ public class GameScreen extends ScreenAdapter {
 
         //Render the objects. Render the bg layers, then the player, then the foreground layers to give the effect of
         //3d (as the player can go behind certain objects)
-//        batch.begin();
-//        batch.draw(backgroundTexture, 0, 0);
-//        batch.end();
+        game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0);
+        game.batch.end();
         map.render(new int[]{0,1,2,3,4,5});
         stage.draw();
         map.render(new int[]{6,7});
@@ -192,9 +186,9 @@ public class GameScreen extends ScreenAdapter {
 
         //Show the map if the M key is pressed
         if (Gdx.input.isKeyPressed(Keys.M)){
-//            mapSpriteBatch.begin();
-//            mapSpriteBatch.draw(mapPopupTexture, 0, 0);
-//            mapSpriteBatch.end();
+            game.mapSpriteBatch.begin();
+            game.mapSpriteBatch.draw(mapPopupTexture, 0, 0);
+            game.mapSpriteBatch.end();
         }
     }
 
@@ -214,8 +208,6 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose(){
         ambience.dispose();
-//        batch.dispose();
-//        mapSpriteBatch.dispose();
         map.dispose();
         stage.dispose();
         HUD.dispose();

@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.group4.Auber.Player;
+import com.group4.Auber.Actors.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;

@@ -20,7 +20,7 @@ public class MapRenderer extends OrthogonalTiledMapRenderer {
 
     public int[][] intMap;
     public HashSet[][] objMap;
-    MapProperties properties;
+    public MapProperties properties;
 
     //Each one of these is used in the string representation of the map for collision detection
     final int WALL = 1;

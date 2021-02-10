@@ -1,4 +1,4 @@
-package com.group4.Auber;
+package com.group4.Auber.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.Input.Keys;
+import com.group4.Auber.AuberGame;
 
 /**
  * TitleScreen is an extension of {@link com.badlogic.gdx.ScreenAdapter} to create and render the title screen.
@@ -29,7 +30,6 @@ public class TitleScreen extends ScreenAdapter {
 
     public AuberGame game;
     private Stage stage;
-    private final SpriteBatch batch = new SpriteBatch();
 
     /**
      * A flag to see if there is music playing from a previous screen
@@ -188,9 +188,9 @@ public class TitleScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Draw the batch and stage
-        batch.begin();
-        batch.draw(backgroundTexture, 0, 0);
-        batch.end();
+        game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0);
+        game.batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
@@ -210,7 +210,6 @@ public class TitleScreen extends ScreenAdapter {
         menuSelect.dispose();
         menuMusic.stop();
         menuMusic.dispose();
-        batch.dispose();
         stage.dispose();
 	}
 

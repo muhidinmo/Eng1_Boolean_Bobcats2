@@ -1,4 +1,4 @@
-package com.group4.Auber;
+package com.group4.Auber.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.group4.Auber.AuberGame;
+import com.group4.Auber.Constants;
+import com.group4.Auber.MapRenderer;
 import com.group4.Auber.Screens.GameEndScreen;
 
 import java.lang.Math;

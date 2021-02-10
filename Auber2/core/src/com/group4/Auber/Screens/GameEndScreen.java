@@ -1,4 +1,4 @@
-package com.group4.Auber;
+package com.group4.Auber.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
+import com.group4.Auber.AuberGame;
 
 /**
  * GameEndScreen is an extension of {@link com.badlogic.gdx.ScreenAdapter} to create and render the end game screen.
@@ -27,7 +28,6 @@ public class GameEndScreen extends ScreenAdapter {
     public AuberGame game;
     private boolean playerWon;
     private Stage stage;
-    private SpriteBatch batch = new SpriteBatch();
 
     /**
      * The menu music
@@ -112,9 +112,9 @@ public class GameEndScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Draw the stage & batch
-        batch.begin();
-        batch.draw(backgroundTexture, 0, 0);
-        batch.end();
+        game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0);
+        game.batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
@@ -123,7 +123,6 @@ public class GameEndScreen extends ScreenAdapter {
     public void dispose () {
         menuSelect.dispose();
         menuMusic.dispose();
-        batch.dispose();
         stage.dispose();
     }
     

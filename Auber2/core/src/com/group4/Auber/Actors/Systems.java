@@ -1,8 +1,10 @@
-package com.group4.Auber;
+package com.group4.Auber.Actors;
 import java.util.ArrayList;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.group4.Auber.AuberGame;
 import com.group4.Auber.HUD.HUD;
+import com.group4.Auber.MapRenderer;
 import com.group4.Auber.Screens.GameEndScreen;
 
 /**
@@ -122,7 +124,7 @@ public class Systems extends Actor {
     }
 
     /**
-     * Called when the player dies
+     * Called when the system dies
      */
     public void onDeath(){
         map.autoLeave(this,getX(),getY(), getWidth(), getHeight());
