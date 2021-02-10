@@ -6,11 +6,12 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.utils.Array;
+import com.group4.Auber.Actors.Operative;
 import com.group4.Auber.MapRenderer;
 
 /**
  *  Used to calculate how the operative needs to move by following the path. This is the main pathfinding class used
- *  by the {@link com.group4.Auber.Operative}.
+ *  by the {@link Operative}.
  *
  * @author Adam Wiegrand
  */
