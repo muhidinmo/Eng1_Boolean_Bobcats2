@@ -30,8 +30,8 @@ public class DesktopLauncher {
 
 
 		config.title = "Auber - Group 4";
-		config.width = 1920;
-		config.height = 1080;
+		config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+		config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
 		config.fullscreen = true;
 		config.forceExit = false;
 		new LwjglApplication(new AuberGame(), config);

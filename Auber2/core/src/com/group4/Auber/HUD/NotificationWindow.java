@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Creates a scrolling notification window that can have notifications added to it in diffrent colours.
@@ -106,9 +104,7 @@ public class NotificationWindow extends ScrollPane {
      */
     public void addNotification(String text, Color color) {
         //Add the timestamp row
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        Label timestamp = new Label("[" + dateFormatter.format(now) + "]", new Label.LabelStyle(font, timestampColor));
+        Label timestamp = new Label("Notification: ", new Label.LabelStyle(font, timestampColor));
         table.add(timestamp).top().left().pad(tablePadding );
 
         //Create the notification and container (the container is used for text wrapping)
